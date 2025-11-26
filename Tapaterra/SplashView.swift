@@ -5,11 +5,31 @@ struct SplashView: View {
     @State private var isAnimating = false
     @State private var flagScale: CGFloat = 0.1
     @State private var flagRotation: Double = 0
-    @State private var usaFlagOpacity: Double = 0
-    @State private var polishFlagOpacity: Double = 0
+    @State private var flagOpacity: [Double] = Array(repeating: 0, count: 10)
+    @State private var flagRotations: [Double] = Array(repeating: 0, count: 10)
+    @State private var flagScales: [CGFloat] = Array(repeating: 0.1, count: 10)
     @State private var titleOpacity: Double = 0
     @State private var titleScale: CGFloat = 0.8
     @State private var starsOffset: CGFloat = 0
+
+    // Array of flags from different regions
+    private let flags = [
+        FlagAssets.NorthAmerica.unitedStates,
+        FlagAssets.Europe.poland,
+        FlagAssets.Asia.japan,
+        FlagAssets.SouthAmerica.brazil,
+        FlagAssets.Africa.southAfrica,
+        FlagAssets.Europe.france,
+        FlagAssets.Asia.india,
+        FlagAssets.NorthAmerica.canada,
+        FlagAssets.Oceania.australia,
+        FlagAssets.SouthAmerica.argentina
+    ]
+
+    private let flagNames = [
+        "USA", "Poland", "Japan", "Brazil", "South Africa",
+        "France", "India", "Canada", "Australia", "Argentina"
+    ]
 
     var body: some View {
         GeometryReader { geometry in
@@ -45,35 +65,71 @@ struct SplashView: View {
                 }
 
                 // Main content
-                VStack(spacing: 40) {
-                    // Flags container
-                    HStack(spacing: 30) {
-                        // USA Flag
-                        FlagAssets.NorthAmerica.unitedStates
-                            .resizable()
-                            .scaledToFit()
-                            .frame(height: 120)
-                            .shadow(color: .white.opacity(0.3), radius: 10, x: 5, y: 5)
-                            .scaleEffect(flagScale)
-                            .rotationEffect(.degrees(flagRotation))
-                            .opacity(usaFlagOpacity)
-                            .animation(.spring(response: 1.5, dampingFraction: 0.6), value: flagScale)
-                            .animation(.spring(response: 1.5, dampingFraction: 0.6), value: flagRotation)
-                            .animation(.easeInOut(duration: 1.0), value: usaFlagOpacity)
+                VStack(spacing: 30) {
+                    // Circular flags container
+                    ZStack {
+                        ForEach(Array(flags.enumerated()), id: \.offset) { index, flag in
+                            let angle = Double(index) * (360.0 / Double(flags.count))
+                            let radius = min(geometry.size.width, geometry.size.height) * 0.25
+                            let x = cos(angle * .pi / 180) * radius
+                            let y = sin(angle * .pi / 180) * radius
 
-                        // Polish Flag
-                        FlagAssets.Europe.poland
-                            .resizable()
-                            .scaledToFit()
-                            .frame(height: 120)
-                            .shadow(color: .white.opacity(0.3), radius: 10, x: 5, y: 5)
-                            .scaleEffect(flagScale)
-                            .rotationEffect(.degrees(-flagRotation))
-                            .opacity(polishFlagOpacity)
-                            .animation(.spring(response: 1.5, dampingFraction: 0.6).delay(0.3), value: flagScale)
-                            .animation(.spring(response: 1.5, dampingFraction: 0.6).delay(0.3), value: flagRotation)
-                            .animation(.easeInOut(duration: 1.0).delay(0.3), value: polishFlagOpacity)
+                            VStack(spacing: 4) {
+                                flag
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 50, height: 35)
+                                    .shadow(color: .white.opacity(0.4), radius: 8, x: 3, y: 3)
+                                    .scaleEffect(flagScales[index])
+                                    .rotationEffect(.degrees(flagRotations[index]))
+                                    .opacity(flagOpacity[index])
+                                    .animation(
+                                        .spring(response: 1.8, dampingFraction: 0.7).delay(Double(index) * 0.15),
+                                        value: flagScales[index]
+                                    )
+                                    .animation(
+                                        .spring(response: 2.0, dampingFraction: 0.6).delay(Double(index) * 0.15),
+                                        value: flagRotations[index]
+                                    )
+                                    .animation(
+                                        .easeInOut(duration: 1.2).delay(0.5 + Double(index) * 0.1),
+                                        value: flagOpacity[index]
+                                    )
+
+                                Text(flagNames[index])
+                                    .font(.system(size: 8, weight: .medium))
+                                    .foregroundColor(.white.opacity(0.9))
+                                    .opacity(flagOpacity[index])
+                                    .animation(
+                                        .easeInOut(duration: 1.0).delay(0.8 + Double(index) * 0.1),
+                                        value: flagOpacity[index]
+                                    )
+                            }
+                            .offset(x: x, y: y)
+                        }
+
+                        // Center decoration
+                        VStack {
+                            Circle()
+                                .fill(Color.white.opacity(0.1))
+                                .frame(width: 80, height: 80)
+                                .overlay(
+                                    Circle()
+                                        .stroke(Color.white.opacity(0.3), lineWidth: 2)
+                                        .opacity(titleOpacity > 0 ? 1.0 : 0.0)
+                                        .animation(.easeInOut(duration: 2.0).delay(1.0), value: titleOpacity)
+                                )
+                                .opacity(titleOpacity > 0 ? 1.0 : 0.0)
+                                .animation(.easeInOut(duration: 1.5).delay(1.0), value: titleOpacity)
+
+                            Text("Flags")
+                                .font(.system(size: 14, weight: .bold, design: .rounded))
+                                .foregroundColor(.white.opacity(0.8))
+                                .opacity(titleOpacity)
+                                .animation(.easeInOut(duration: 1.5).delay(1.2), value: titleOpacity)
+                        }
                     }
+                    .frame(height: min(geometry.size.width, geometry.size.height) * 0.5)
 
                     // App title with decorative elements
                     VStack(spacing: 15) {
@@ -166,18 +222,24 @@ struct SplashView: View {
     private func startAnimations() {
         isAnimating = true
 
-        // Animate flags
-        withAnimation(.spring(response: 1.5, dampingFraction: 0.6)) {
-            flagScale = 1.0
-            flagRotation = 360
-        }
+        // Animate all flags in a cascading pattern
+        for index in 0..<flags.count {
+            let delay = Double(index) * 0.15
 
-        withAnimation(.easeInOut(duration: 1.0).delay(0.5)) {
-            usaFlagOpacity = 1.0
-        }
+            // Scale animation
+            withAnimation(.spring(response: 1.8, dampingFraction: 0.7).delay(delay)) {
+                flagScales[index] = 1.0
+            }
 
-        withAnimation(.easeInOut(duration: 1.0).delay(0.8)) {
-            polishFlagOpacity = 1.0
+            // Rotation animation
+            withAnimation(.spring(response: 2.0, dampingFraction: 0.6).delay(delay)) {
+                flagRotations[index] = index % 2 == 0 ? 360 : -360
+            }
+
+            // Opacity animation
+            withAnimation(.easeInOut(duration: 1.2).delay(0.5 + delay)) {
+                flagOpacity[index] = 1.0
+            }
         }
 
         // Animate title
@@ -186,8 +248,8 @@ struct SplashView: View {
             titleScale = 1.0
         }
 
-        // Transition to main content after 4 seconds
-        DispatchQueue.main.asyncAfter(deadline: .now() + 4.0) {
+        // Transition to main content after 6 seconds (longer for more flags)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 6.0) {
             splashState.showMainApp()
         }
     }
