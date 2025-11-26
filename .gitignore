@@ -1,0 +1,76 @@
+# Xcode
+#
+# gitignore contributors: remember to update Global/Xcode.gitignore, Objective-C.gitignore & Swift.gitignore
+
+## User settings
+xcuserdata/
+
+## Compatibility
+*.mode1v3
+*.mode2v3
+*.perspectivev3
+*.ouline
+*.pbuser
+*.xccheckout
+*.xccheckout/
+
+## Misc
+*.moved-aside
+*.xcsnapshots
+*.xclayout
+
+## Obj-C/Swift specific
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+## Playgrounds
+timeline.xctimeline
+playground.xcworkspace
+
+## Swift Package Manager
+# Add this line if you want to avoid checking in source code from Swift Package Manager dependencies.
+.swiftpm/xcode/
+# Add this line if you want to avoid checking in compiled data from Swift Package Manager.
+.swiftpm/configuration/build/
+
+## CocoaPods
+# We recommend against adding the Pods directory to your .gitignore. However
+# you should judge for yourself, the pros and cons are mentioned at:
+# https://guides.cocoapods.org/using/using-cocoapods.html#should-i-check-the-pods-directory-into-source-control
+#
+# Pods/
+#
+# Add this line if you want to avoid checking in source code from the Pods directory.
+# Pods/
+
+## Carthage
+# Add this line if you want to avoid checking in source code from Carthage dependencies.
+# Carthage/Checkouts/
+# Carthage/Build/
+
+## fastlane
+# It is recommended to not store the screenshots in the git repo.
+# fastlane/screenshots
+# fastlane/test_output
+
+## Code injection
+# InjectionIII.app/
+
+## Other
+*.DS_Store
+*.swp
+*~
+.vscode/
+.cursor/
+terminals/
+
+## Generated Assets (if you want to regenerate them and not track them, otherwise keep them)
+# Tapaterra/Assets.xcassets/Flags/
+# Tapaterra/FlagAssets.swift
+
+## Local Dev
+.env
+local.properties
+

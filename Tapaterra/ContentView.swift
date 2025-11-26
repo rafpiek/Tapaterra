@@ -15,6 +15,12 @@ struct ContentView: View {
     var body: some View {
         NavigationSplitView {
             List {
+                NavigationLink {
+                    FlagPreviewView()
+                } label: {
+                    Label("Preview Flags", systemImage: "flag.fill")
+                }
+
                 ForEach(items) { item in
                     NavigationLink {
                         Text("Item at \(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))")
