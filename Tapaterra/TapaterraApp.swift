@@ -12,6 +12,7 @@ import Combine
 @main
 struct TapaterraApp: App {
     @StateObject private var splashState = SplashStateManager()
+    @StateObject private var languageManager = LanguageManager()
 
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
@@ -31,14 +32,19 @@ struct TapaterraApp: App {
             ZStack {
                 if splashState.showMainContent {
                     ContentView()
+                        .environmentObject(languageManager)
                         .transition(.opacity)
                 } else {
                     SplashView()
+                        .environmentObject(languageManager)
                         .transition(.opacity)
                 }
             }
             .animation(.easeInOut(duration: 1.0), value: splashState.showMainContent)
             .environmentObject(splashState)
+            .onAppear {
+                currentLanguageManager = languageManager
+            }
         }
         .modelContainer(sharedModelContainer)
     }

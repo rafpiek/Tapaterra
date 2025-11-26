@@ -14,3 +14,13 @@
 "countries.canada" = "Kanada";
 "countries.australia" = "Australia";
 "countries.argentina" = "Argentyna";
+
+/* Content View */
+"content.preview_flags" = "Podgląd flag";
+"content.add_item" = "Dodaj element";
+"content.select_item" = "Wybierz element";
+"content.item_at" = "Element z";
+"content.language" = "Język";
+"content.change_language" = "Zmień język";
+"content.english" = "Angielski";
+"content.polish" = "Polski";

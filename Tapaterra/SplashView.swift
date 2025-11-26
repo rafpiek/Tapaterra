@@ -2,6 +2,7 @@ import SwiftUI
 
 struct SplashView: View {
     @EnvironmentObject var splashState: SplashStateManager
+    @EnvironmentObject var languageManager: LanguageManager
     @State private var isAnimating = false
     @State private var flagScale: CGFloat = 0.1
     @State private var flagRotation: Double = 0
