@@ -1,0 +1,16 @@
+/* Splash View */
+"splash.flags" = "Flags";
+"splash.app_title" = "Tapaterra";
+"splash.subtitle" = "Explore the World's Flags";
+
+/* Country Names */
+"countries.usa" = "USA";
+"countries.poland" = "Poland";
+"countries.japan" = "Japan";
+"countries.brazil" = "Brazil";
+"countries.south_africa" = "South Africa";
+"countries.france" = "France";
+"countries.india" = "India";
+"countries.canada" = "Canada";
+"countries.australia" = "Australia";
+"countries.argentina" = "Argentina";

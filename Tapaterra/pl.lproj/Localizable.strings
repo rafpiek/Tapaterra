@@ -1,0 +1,16 @@
+/* Splash View */
+"splash.flags" = "Flagi";
+"splash.app_title" = "Tapaterra";
+"splash.subtitle" = "Poznaj flagi świata";
+
+/* Country Names */
+"countries.usa" = "USA";
+"countries.poland" = "Polska";
+"countries.japan" = "Japonia";
+"countries.brazil" = "Brazylia";
+"countries.south_africa" = "RPA";
+"countries.france" = "Francja";
+"countries.india" = "Indie";
+"countries.canada" = "Kanada";
+"countries.australia" = "Australia";
+"countries.argentina" = "Argentyna";

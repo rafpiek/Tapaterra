@@ -26,10 +26,20 @@ struct SplashView: View {
         FlagAssets.SouthAmerica.argentina
     ]
 
-    private let flagNames = [
-        "USA", "Poland", "Japan", "Brazil", "South Africa",
-        "France", "India", "Canada", "Australia", "Argentina"
-    ]
+    private var flagNames: [String] {
+        return [
+            "countries.usa".localized,
+            "countries.poland".localized,
+            "countries.japan".localized,
+            "countries.brazil".localized,
+            "countries.south_africa".localized,
+            "countries.france".localized,
+            "countries.india".localized,
+            "countries.canada".localized,
+            "countries.australia".localized,
+            "countries.argentina".localized
+        ]
+    }
 
     var body: some View {
         GeometryReader { geometry in
@@ -122,7 +132,7 @@ struct SplashView: View {
                                 .opacity(titleOpacity > 0 ? 1.0 : 0.0)
                                 .animation(.easeInOut(duration: 1.5).delay(1.0), value: titleOpacity)
 
-                            Text("Flags")
+                            Text("splash.flags".localized)
                                 .font(.system(size: 14, weight: .bold, design: .rounded))
                                 .foregroundColor(.white.opacity(0.8))
                                 .opacity(titleOpacity)
@@ -155,7 +165,7 @@ struct SplashView: View {
                         }
 
                         // Main title
-                        Text("Tapaterra")
+                        Text("splash.app_title".localized)
                             .font(.system(size: 42, weight: .bold, design: .rounded))
                             .foregroundColor(.white)
                             .shadow(color: .white.opacity(0.4), radius: 8, x: 0, y: 0)
@@ -165,7 +175,7 @@ struct SplashView: View {
                             .animation(.easeInOut(duration: 1.5).delay(1.0), value: titleOpacity)
 
                         // Subtitle
-                        Text("Explore the World's Flags")
+                        Text("splash.subtitle".localized)
                             .font(.system(size: 16, weight: .medium, design: .rounded))
                             .foregroundColor(.white.opacity(0.8))
                             .opacity(titleOpacity)
@@ -255,7 +265,14 @@ struct SplashView: View {
     }
 }
 
-#Preview {
+#Preview("English") {
     SplashView()
         .environmentObject(SplashStateManager())
+        .environment(\.locale, .init(identifier: "en"))
+}
+
+#Preview("Polish") {
+    SplashView()
+        .environmentObject(SplashStateManager())
+        .environment(\.locale, .init(identifier: "pl"))
 }
