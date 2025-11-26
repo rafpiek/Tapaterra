@@ -7,21 +7,16 @@
 
 import SwiftUI
 import SwiftData
-import Combine
 
 @main
 struct TapaterraApp: App {
-    @StateObject private var splashState = SplashStateManager()
-    @StateObject private var languageManager = LanguageManager()
+    @State private var showSplash = true
 
     var sharedModelContainer: ModelContainer = {
-        let schema = Schema([
-            Item.self,
-        ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-
+        let schema = Schema([Item.self])
+        let config = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
         do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
+            return try ModelContainer(for: schema, configurations: [config])
         } catch {
             fatalError("Could not create ModelContainer: \(error)")
         }
@@ -30,32 +25,19 @@ struct TapaterraApp: App {
     var body: some Scene {
         WindowGroup {
             ZStack {
-                if splashState.showMainContent {
-                    ContentView()
-                        .environmentObject(languageManager)
-                        .transition(.opacity)
+                if showSplash {
+                    SplashView {
+                        withAnimation(.easeInOut(duration: 0.8)) {
+                            showSplash = false
+                        }
+                    }
+                    .transition(.opacity)
                 } else {
-                    SplashView()
-                        .environmentObject(languageManager)
+                    ContentView()
                         .transition(.opacity)
                 }
             }
-            .animation(.easeInOut(duration: 1.0), value: splashState.showMainContent)
-            .environmentObject(splashState)
-            .onAppear {
-                currentLanguageManager = languageManager
-            }
         }
         .modelContainer(sharedModelContainer)
-    }
-}
-
-class SplashStateManager: ObservableObject {
-    @Published var showMainContent = false
-
-    func showMainApp() {
-        withAnimation(.easeInOut(duration: 1.0)) {
-            showMainContent = true
-        }
     }
 }

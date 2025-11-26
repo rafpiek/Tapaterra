@@ -11,95 +11,48 @@ import SwiftData
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
     @Query private var items: [Item]
-    @EnvironmentObject var languageManager: LanguageManager
+    @State private var langManager = LanguageManager.shared
 
     var body: some View {
-        NavigationView {
+        NavigationStack {
             List {
                 NavigationLink {
                     FlagPreviewView()
                 } label: {
-                    Label("content.preview_flags".localized, systemImage: "flag.fill")
+                    Label(L10n.get("preview_flags"), systemImage: "flag.fill")
                 }
 
                 ForEach(items) { item in
                     NavigationLink {
-                        Text("content.item_at".localized + " \(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))")
+                        Text("\(L10n.get("item_at")) \(item.timestamp.formatted())")
                     } label: {
-                        Text(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))
+                        Text(item.timestamp.formatted(date: .numeric, time: .standard))
                     }
                 }
                 .onDelete(perform: deleteItems)
 
-                // Language switching section
-                Section("content.change_language".localized) {
-                    VStack(spacing: 16) {
-                        HStack {
-                            Text("content.language".localized)
-                                .font(.headline)
-                            Spacer()
-                            Text(languageManager.currentLanguage == "en" ? "English" : "Polski")
-                                .foregroundColor(.secondary)
-                        }
-
-                        HStack(spacing: 12) {
-                            Button(action: {
-                                languageManager.setLanguage("en")
-                                currentLanguageManager = languageManager
-                            }) {
-                                HStack {
-                                    Image(systemName: "globe")
-                                    Text("content.english".localized)
-                                }
-                                .frame(maxWidth: .infinity)
-                                .padding()
-                                .background(languageManager.currentLanguage == "en" ? Color.blue : Color.gray.opacity(0.2))
-                                .foregroundColor(languageManager.currentLanguage == "en" ? .white : .primary)
-                                .cornerRadius(8)
-                            }
-
-                            Button(action: {
-                                languageManager.setLanguage("pl")
-                                currentLanguageManager = languageManager
-                            }) {
-                                HStack {
-                                    Image(systemName: "globe")
-                                    Text("content.polish".localized)
-                                }
-                                .frame(maxWidth: .infinity)
-                                .padding()
-                                .background(languageManager.currentLanguage == "pl" ? Color.red : Color.gray.opacity(0.2))
-                                .foregroundColor(languageManager.currentLanguage == "pl" ? .white : .primary)
-                                .cornerRadius(8)
-                            }
-                        }
-                    }
-                    .padding(.vertical, 8)
+                Section(L10n.get("change_language")) {
+                    LanguagePicker()
                 }
             }
             .toolbar {
+                #if os(iOS)
                 ToolbarItem(placement: .navigationBarTrailing) {
                     EditButton()
                 }
+                #endif
                 ToolbarItem {
                     Button(action: addItem) {
-                        Label("content.add_item".localized, systemImage: "plus")
+                        Label(L10n.get("add_item"), systemImage: "plus")
                     }
                 }
             }
-        }
-        .onAppear {
-            currentLanguageManager = languageManager
-        }
-        .onChange(of: languageManager.currentLanguage) { _, _ in
-            currentLanguageManager = languageManager
         }
     }
 
     private func addItem() {
         withAnimation {
-            let newItem = Item(timestamp: Date())
-            modelContext.insert(newItem)
+            modelContext.insert(Item(timestamp: Date()))
         }
     }
 
@@ -109,6 +62,32 @@ struct ContentView: View {
                 modelContext.delete(items[index])
             }
         }
+    }
+}
+
+struct LanguagePicker: View {
+    @State private var langManager = LanguageManager.shared
+
+    var body: some View {
+        HStack(spacing: 12) {
+            ForEach(Language.allCases, id: \.rawValue) { lang in
+                Button {
+                    langManager.setLanguage(lang)
+                } label: {
+                    HStack {
+                        Image(systemName: "globe")
+                        Text(lang.displayName)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 12)
+                    .background(langManager.currentLanguage == lang ? Color.accentColor : Color.gray.opacity(0.2))
+                    .foregroundStyle(langManager.currentLanguage == lang ? .white : .primary)
+                    .cornerRadius(8)
+                }
+                .buttonStyle(.plain)
+            }
+        }
+        .padding(.vertical, 4)
     }
 }
 
