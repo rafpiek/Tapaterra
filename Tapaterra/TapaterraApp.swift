@@ -7,9 +7,12 @@
 
 import SwiftUI
 import SwiftData
+import Combine
 
 @main
 struct TapaterraApp: App {
+    @StateObject private var splashState = SplashStateManager()
+
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Item.self,
@@ -25,8 +28,28 @@ struct TapaterraApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ZStack {
+                if splashState.showMainContent {
+                    ContentView()
+                        .transition(.opacity)
+                } else {
+                    SplashView()
+                        .transition(.opacity)
+                }
+            }
+            .animation(.easeInOut(duration: 1.0), value: splashState.showMainContent)
+            .environmentObject(splashState)
         }
         .modelContainer(sharedModelContainer)
+    }
+}
+
+class SplashStateManager: ObservableObject {
+    @Published var showMainContent = false
+
+    func showMainApp() {
+        withAnimation(.easeInOut(duration: 1.0)) {
+            showMainContent = true
+        }
     }
 }
