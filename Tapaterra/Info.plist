@@ -9,7 +9,7 @@
 		<key>UIImageName</key>
 		<string>LaunchIcon</string>
 		<key>UIImagePreferredContentMode</key>
-		<string>scaleAspectFill</string>
+		<string>scaleAspectFit</string>
 		<key>UIImageRespectsSafeAreaInsets</key>
 		<false/>
 	</dict>
