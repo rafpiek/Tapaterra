@@ -50,6 +50,16 @@ enum L10n {
             "item_at": "Item at",
             "language": "Language",
             "change_language": "Change Language",
+            "detail.capital": "Capital",
+            "detail.main_cities": "Main Cities",
+            "detail.main_rivers": "Main Rivers",
+            "detail.main_mountains": "Main Mountains",
+            "detail.neighbours": "Neighbours",
+            "detail.population": "Population",
+            "detail.area": "Area",
+            "detail.currency": "Currency",
+            "detail.language": "Language",
+            "detail.no_data": "No data available",
         ],
         .pl: [
             "splash.flags": "Flagi",
@@ -61,6 +71,16 @@ enum L10n {
             "item_at": "Element z",
             "language": "Język",
             "change_language": "Zmień język",
+            "detail.capital": "Stolica",
+            "detail.main_cities": "Główne miasta",
+            "detail.main_rivers": "Główne rzeki",
+            "detail.main_mountains": "Główne góry",
+            "detail.neighbours": "Sąsiedzi",
+            "detail.population": "Populacja",
+            "detail.area": "Powierzchnia",
+            "detail.currency": "Waluta",
+            "detail.language": "Język",
+            "detail.no_data": "Brak danych",
         ]
     ]
 }

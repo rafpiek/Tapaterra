@@ -24,3 +24,15 @@
 "content.change_language" = "Change Language";
 "content.english" = "English";
 "content.polish" = "Polish";
+
+/* Country Detail View */
+"detail.capital" = "Capital";
+"detail.main_cities" = "Main Cities";
+"detail.main_rivers" = "Main Rivers";
+"detail.main_mountains" = "Main Mountains";
+"detail.neighbours" = "Neighbours";
+"detail.population" = "Population";
+"detail.area" = "Area";
+"detail.currency" = "Currency";
+"detail.language" = "Language";
+"detail.no_data" = "No data available";

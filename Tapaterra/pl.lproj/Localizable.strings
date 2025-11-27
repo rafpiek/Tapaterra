@@ -24,3 +24,15 @@
 "content.change_language" = "Zmień język";
 "content.english" = "Angielski";
 "content.polish" = "Polski";
+
+/* Country Detail View */
+"detail.capital" = "Stolica";
+"detail.main_cities" = "Główne miasta";
+"detail.main_rivers" = "Główne rzeki";
+"detail.main_mountains" = "Główne góry";
+"detail.neighbours" = "Sąsiedzi";
+"detail.population" = "Populacja";
+"detail.area" = "Powierzchnia";
+"detail.currency" = "Waluta";
+"detail.language" = "Język";
+"detail.no_data" = "Brak danych";

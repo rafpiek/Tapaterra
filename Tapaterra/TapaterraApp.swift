@@ -22,6 +22,11 @@ struct TapaterraApp: App {
         }
     }()
 
+    init() {
+        // Load country details data on app startup
+        CountryDetailsData.loadDetails()
+    }
+
     var body: some Scene {
         WindowGroup {
             ZStack {
