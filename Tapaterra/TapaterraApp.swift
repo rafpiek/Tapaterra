@@ -33,7 +33,7 @@ struct TapaterraApp: App {
                     }
                     .transition(.opacity)
                 } else {
-                    ContentView()
+                    MainTabView()
                         .transition(.opacity)
                 }
             }
