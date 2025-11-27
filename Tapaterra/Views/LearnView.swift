@@ -3,9 +3,14 @@ import SwiftUI
 struct LearnView: View {
     @State private var selectedContinent: Continent = .all
     @State private var selectedCountry: Country?
+    @State private var langManager = LanguageManager.shared
+    @State private var searchText: String = ""
+    @FocusState private var isSearchFocused: Bool
 
     private var filteredCountries: [Country] {
-        FlagData.countries(for: selectedContinent)
+        let byContinent = FlagData.countries(for: selectedContinent)
+        guard !searchText.isEmpty else { return byContinent }
+        return byContinent.filter { $0.localizedName.localizedCaseInsensitiveContains(searchText) }
     }
 
     var body: some View {
@@ -25,7 +30,7 @@ struct LearnView: View {
             VStack(spacing: 0) {
                 // Custom header with title
                 VStack(spacing: 0) {
-                    Text("Learn")
+                    Text(L10n.get("tab.learn"))
                         .font(.system(size: 42, weight: .bold, design: .rounded))
                         .foregroundColor(.white)
                         .shadow(color: .white.opacity(0.4), radius: 8)
@@ -52,6 +57,36 @@ struct LearnView: View {
                 }
                 .background(Color.black.opacity(0.2))
 
+                // Search bar
+                HStack(spacing: 8) {
+                    TextField("", text: $searchText, prompt: Text(L10n.get("search.placeholder")).foregroundColor(.white.opacity(0.5)))
+                        .textFieldStyle(.plain)
+                        .focused($isSearchFocused)
+                        .submitLabel(.search)
+                        .onSubmit {
+                            isSearchFocused = false
+                        }
+
+                    if !searchText.isEmpty {
+                        Button(action: {
+                            searchText = ""
+                            isSearchFocused = false
+                        }) {
+                            Image(systemName: "xmark.circle.fill")
+                                .foregroundColor(.white.opacity(0.6))
+                                .font(.system(size: 18))
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+                .padding(.horizontal, 16)
+                .padding(.vertical, 12)
+                .background(Color.white.opacity(0.1))
+                .cornerRadius(12)
+                .foregroundColor(.white)
+                .padding(.horizontal, 16)
+                .padding(.bottom, 8)
+
                 // Flags grid
                 ScrollView {
                     LazyVGrid(columns: [
@@ -62,11 +97,15 @@ struct LearnView: View {
                         ForEach(filteredCountries) { country in
                             FlagCard(country: country) {
                                 selectedCountry = country
+                                isSearchFocused = false
                             }
                         }
                     }
                     .padding(.horizontal, 16)
                     .padding(.vertical, 20)
+                }
+                .onTapGesture {
+                    isSearchFocused = false
                 }
             }
         }
@@ -88,7 +127,7 @@ struct ContinentButton: View {
             HStack(spacing: 6) {
                 Image(systemName: continent.icon)
                     .font(.system(size: 14, weight: .semibold))
-                Text(continent.rawValue)
+                Text(continent.localizedName)
                     .font(.system(size: 14, weight: .semibold, design: .rounded))
             }
             .foregroundColor(isSelected ? .white : .white.opacity(0.7))
@@ -121,7 +160,7 @@ struct FlagCard: View {
                     .clipShape(RoundedRectangle(cornerRadius: 8))
                     .shadow(color: .black.opacity(0.2), radius: 4, x: 0, y: 2)
 
-                Text(country.name)
+                Text(country.localizedName)
                     .font(.system(size: 11, weight: .medium, design: .rounded))
                     .foregroundColor(.white)
                     .multilineTextAlignment(.center)
@@ -167,32 +206,44 @@ struct CountryDetailSheet: View {
             .ignoresSafeArea()
 
             ScrollView {
-                VStack(spacing: 20) {
-                    // Drag indicator
-                    Capsule()
-                        .fill(Color.white.opacity(0.4))
-                        .frame(width: 40, height: 5)
-                        .padding(.top, 12)
-
+                VStack(spacing: 16) {
                     // Large flag
                     country.flagImage
                         .resizable()
                         .scaledToFit()
-                        .frame(height: 180)
+                        .frame(height: 160)
                         .clipShape(RoundedRectangle(cornerRadius: 16))
                         .shadow(color: .black.opacity(0.3), radius: 8, x: 0, y: 4)
+                        .padding(.top, 20)
 
                     // Country name
-                    Text(country.name)
-                        .font(.system(size: 28, weight: .bold, design: .rounded))
+                    Text(country.localizedName)
+                        .font(.system(size: 26, weight: .bold, design: .rounded))
                         .foregroundColor(.white)
                         .shadow(color: .white.opacity(0.3), radius: 4)
+
+                    // Scroll indicator - visible initially
+                    HStack(spacing: 6) {
+                        Image(systemName: "arrow.down")
+                            .font(.system(size: 12, weight: .semibold))
+                        Text(L10n.get("detail.scroll_hint"))
+                            .font(.system(size: 13, weight: .medium, design: .rounded))
+                        Image(systemName: "arrow.down")
+                            .font(.system(size: 12, weight: .semibold))
+                    }
+                    .foregroundColor(.white.opacity(0.6))
+                    .padding(.vertical, 8)
+                    .padding(.horizontal, 16)
+                    .background(
+                        Capsule()
+                            .fill(Color.white.opacity(0.15))
+                    )
 
                     // Details
                     if let details = details {
                         VStack(spacing: 16) {
                             if let capital = details.capital {
-                                DetailRow(title: L10n.get("detail.capital"), value: capital)
+                                DetailRow(title: L10n.get("detail.capital"), value: L10n.capital(capital))
                             }
 
                             if !details.mainCities.isEmpty {
@@ -200,7 +251,7 @@ struct CountryDetailSheet: View {
                             }
 
                             if !details.neighbours.isEmpty {
-                                DetailRow(title: L10n.get("detail.neighbours"), values: details.neighbours)
+                                DetailRow(title: L10n.get("detail.neighbours"), values: details.neighbours.map { L10n.neighbour($0) })
                             }
 
                             if !details.mainRivers.isEmpty {
@@ -223,10 +274,10 @@ struct CountryDetailSheet: View {
 
                             HStack(spacing: 12) {
                                 if let currency = details.currency {
-                                    InfoBadge(label: L10n.get("detail.currency"), value: currency)
+                                    InfoBadge(label: L10n.get("detail.currency"), value: L10n.currency(currency))
                                 }
                                 if let language = details.language {
-                                    InfoBadge(label: L10n.get("detail.language"), value: language)
+                                    InfoBadge(label: L10n.get("detail.language"), value: L10n.language(language))
                                 }
                             }
                         }
@@ -240,8 +291,8 @@ struct CountryDetailSheet: View {
                 .padding(.bottom, 40)
             }
         }
-        .presentationDetents([.medium, .large])
-        .presentationDragIndicator(.hidden)
+        .presentationDetents([.fraction(0.75), .large])
+        .presentationDragIndicator(.visible)
     }
 
     private func formatPopulation(_ population: Int) -> String {

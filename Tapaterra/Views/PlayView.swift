@@ -1,6 +1,8 @@
 import SwiftUI
 
 struct PlayView: View {
+    @State private var langManager = LanguageManager.shared
+
     var body: some View {
         ZStack {
             // Background gradient matching splash screen
@@ -16,7 +18,7 @@ struct PlayView: View {
             .ignoresSafeArea()
 
             VStack {
-                Text("Play")
+                Text(L10n.get("tab.play"))
                     .font(.system(size: 42, weight: .bold, design: .rounded))
                     .foregroundColor(.white)
                     .shadow(color: .white.opacity(0.4), radius: 8)

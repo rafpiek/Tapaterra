@@ -22,6 +22,19 @@ enum Continent: String, CaseIterable {
         case .antarctica: return "snowflake"
         }
     }
+
+    var localizedName: String {
+        switch self {
+        case .all: return L10n.get("continent.all")
+        case .europe: return L10n.get("continent.europe")
+        case .africa: return L10n.get("continent.africa")
+        case .asia: return L10n.get("continent.asia")
+        case .northAmerica: return L10n.get("continent.north_america")
+        case .southAmerica: return L10n.get("continent.south_america")
+        case .oceania: return L10n.get("continent.oceania")
+        case .antarctica: return L10n.get("continent.antarctica")
+        }
+    }
 }
 
 struct Country: Identifiable, Hashable {
@@ -33,6 +46,10 @@ struct Country: Identifiable, Hashable {
 
     var flagImage: Image {
         Image(imageName)
+    }
+
+    var localizedName: String {
+        L10n.get("country.\(isoCode)")
     }
 
     func hash(into hasher: inout Hasher) {

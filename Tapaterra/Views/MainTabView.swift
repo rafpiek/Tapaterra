@@ -2,6 +2,7 @@ import SwiftUI
 
 struct MainTabView: View {
     @State private var selectedTab = 0
+    @State private var langManager = LanguageManager.shared
 
     var body: some View {
         TabView(selection: $selectedTab) {
@@ -9,7 +10,7 @@ struct MainTabView: View {
                 LearnView()
             }
             .tabItem {
-                Label("Learn", systemImage: "book.fill")
+                Label(L10n.get("tab.learn"), systemImage: "book.fill")
             }
             .tag(0)
 
@@ -17,7 +18,7 @@ struct MainTabView: View {
                 PlayView()
             }
             .tabItem {
-                Label("Play", systemImage: "gamecontroller.fill")
+                Label(L10n.get("tab.play"), systemImage: "gamecontroller.fill")
             }
             .tag(1)
 
@@ -25,11 +26,12 @@ struct MainTabView: View {
                 SettingsView()
             }
             .tabItem {
-                Label("Settings", systemImage: "gearshape.fill")
+                Label(L10n.get("tab.settings"), systemImage: "gearshape.fill")
             }
             .tag(2)
         }
         .accentColor(.white)
+        .id(langManager.currentLanguage) // Force refresh when language changes
     }
 }
 
